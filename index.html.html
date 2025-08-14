@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Deepak Bhandari</title>
+
+    <!-- Fonts & Icons -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Saira+Extra+Condensed:wght@600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.14.0/devicon.min.css">
+
+    <style>
+        :root {
+            --bg: #f7fafc;
+            /* page background */
+            --card: #ffffff;
+            /* card surface */
+            --ink: #0f172a;
+            /* primary text */
+            --muted: #475569;
+            /* secondary text */
+            --primary: #2563eb;
+            /* brand */
+            --ring: #93c5fd;
+            /* accents */
+            --glass: rgba(15, 23, 42, .04);
+            --gap: 24px;
+            --radius: 14px;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            margin: 0;
+            height: 100%;
+        }
+
+        body {
+            font-family: Roboto, system-ui, -apple-system, 'Segoe UI', Arial;
+            color: var(--ink);
+            background: var(--bg);
+        }
+
+        /* Canvas background */
+        #bgCanvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            display: block
+        }
+
+        /* Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: rgba(255, 255, 255, .8);
+            backdrop-filter: saturate(160%) blur(10px);
+            border-bottom: 1px solid rgba(15, 23, 42, .06)
+        }
+
+        .header-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap
+        }
+
+        .profile-block {
+            display: flex;
+            gap: 16px;
+            align-items: center
+        }
+
+        .avatar {
+            width: 104px;
+            height: 104px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(15, 23, 42, .06);
+            box-shadow: 0 12px 30px rgba(15, 23, 42, .08)
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover
+        }
+
+        .meta .name {
+            font-family: 'Saira Extra Condensed', sans-serif;
+            font-size: 32px;
+            line-height: 1;
+            color: var(--primary)
+        }
+
+        .meta .headline {
+            margin-top: 6px;
+            color: var(--muted)
+        }
+
+        .contact {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+            font-size: 14px;
+            color: var(--muted)
+        }
+
+        .contact i {
+            color: var(--primary)
+        }
+
+        .socials {
+            display: flex;
+            gap: 10px
+        }
+
+        .socials a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(15, 23, 42, .06);
+            background: #fff;
+            color: var(--primary);
+            text-decoration: none;
+            box-shadow: 0 8px 18px rgba(15, 23, 42, .05)
+        }
+
+        /* Layout */
+        main {
+            max-width: 1100px;
+            margin: 26px auto;
+            padding: 0 20px 60px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--gap);
+            align-items: start
+        }
+
+        /* Panels */
+        .panel {
+            background: var(--card);
+            border: 1px solid rgba(15, 23, 42, .06);
+            border-radius: var(--radius);
+            box-shadow: 0 10px 30px rgba(15, 23, 42, .06);
+            padding: 18px
+        }
+
+        h2 {
+            margin: 0 0 12px;
+            font-size: 18px;
+            color: var(--primary)
+        }
+
+        p.lead {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.7
+        }
+
+        /* Timeline */
+        .timeline {
+            padding-left: 18px;
+            position: relative
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: linear-gradient(180deg, var(--primary), rgba(37, 99, 235, .2));
+            border-radius: 6px
+        }
+
+        .t-item {
+            position: relative;
+            margin: 18px 0;
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: var(--glass);
+            border: 1px solid rgba(15, 23, 42, .05);
+            opacity: 0;
+            transform: translateY(18px)
+        }
+
+        .t-item .date {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        .t-item h3 {
+            margin: 6px 0 6px;
+            font-size: 16px;
+            color: var(--ink)
+        }
+
+        .t-item ul {
+            margin: 6px 0 0;
+            padding-left: 18px;
+            color: var(--muted)
+        }
+
+        /* Projects */
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px
+        }
+
+        .project {
+            border: 1px solid rgba(15, 23, 42, .06);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fff;
+            opacity: 0;
+            transform: translateY(18px)
+        }
+
+        .project img {
+            display: block;
+            width: 100%;
+            height: 140px;
+            object-fit: cover
+        }
+
+        .project .body {
+            padding: 12px
+        }
+
+        .project h4 {
+            margin: 0 0 8px
+        }
+
+        .project p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px
+        }
+
+        /* Skills */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px
+        }
+
+        .skill {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(15, 23, 42, .06);
+            background: #fff;
+            opacity: 0;
+            transform: translateY(18px)
+        }
+
+        .s-ico {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, #eef2ff, #f0f9ff)
+        }
+
+        .s-ico i {
+            font-size: 20px;
+            color: var(--primary)
+        }
+
+        .s-meta {
+            flex: 1
+        }
+
+        .s-name {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 14px
+        }
+
+        .bar {
+            height: 8px;
+            background: #eef2ff;
+            border-radius: 999px;
+            margin-top: 6px;
+            overflow: hidden
+        }
+
+        .bar>i {
+            display: block;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #60a5fa);
+            width: 0
+        }
+
+        /* Chips */
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px
+        }
+
+        .chip {
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: #f1f5f9;
+            color: var(--muted);
+            font-size: 13px;
+            border: 1px solid rgba(15, 23, 42, .06)
+        }
+
+        /* Connect */
+        .connect {
+            display: flex;
+            flex-direction: column;
+            gap: 10px
+        }
+
+        /* Animations */
+        .visible {
+            opacity: 1 !important;
+            transform: none !important;
+            transition: all .6s cubic-bezier(.2, .9, .3, 1)
+        }
+
+        /* Responsive */
+        @media (max-width:960px) {
+            main {
+                grid-template-columns: 1fr
+            }
+
+            .projects {
+                grid-template-columns: 1fr
+            }
+
+            .avatar {
+                width: 92px;
+                height: 92px
+            }
+        }
+
+        /* Hover animation for social buttons */
+        .socials a {
+            transition: transform 0.2s ease, background 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+        }
+
+        .socials a:hover {
+            transform: translateY(-3px) scale(1.05);
+            background: var(--primary);
+            color: #fff !important;
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25);
+        }
+
+        .socials a:active {
+            transform: scale(0.96);
+        }
+
+        /* Card animations with reverse colors on hover */
+        .project,
+        .skill,
+        .t-item {
+            background: #fff;
+            color: var(--accent);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.3s ease, color 0.3s ease;
+        }
+
+        .project:hover,
+        .skill:hover,
+        .t-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+            background: var(--primary);
+            color: #fff !important;
+        }
+
+        .project:hover *:not(svg):not(i),
+.skill:hover *:not(svg):not(i),
+.t-item:hover *:not(svg):not(i){
+            color: #fff !important;
+            fill: #fff !important;
+        }
+
+        .project:active,
+        .skill:active,
+        .t-item:active {
+            transform: scale(0.98);
+        }
+
+        /* Button animations */
+        button,
+        .btn {
+            transition: all 0.25s ease;
+        }
+
+        button:hover,
+        .btn:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active,
+        .btn:active {
+            transform: scale(0.96);
+        }
+        /* Default colors */
+.bar {
+    background: #eef2ff; /* light background */
+    transition: background 0.3s ease;
+}
+
+.bar i {
+    background: var(--primary); /* blue filled part */
+    transition: background 0.3s ease;
+}
+
+/* On card hover */
+.skill:hover .bar {
+    background: #5fd7ff !important; /* lighter white track */
+}
+
+.skill:hover .bar i {
+    background: #fff !important; /* white filled part */
+}
+
+
+    </style>
+</head>
+
+<body>
+    <canvas id="bgCanvas"></canvas>
+
+    <header>
+        <div class="header-inner">
+            <div class="profile-block">
+                <div class="avatar">
+                    <img src="https://media.licdn.com/dms/image/v2/D5603AQFH3cLGEfqrQA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1718216105337?e=1758153600&v=beta&t=SAtZMJzQ7oXZYcIVAnj-PSvBgJ3buVmKypqpiZ10LW8" alt="Deepak Bhandari"
+                        onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 280 280\'><rect width=\'100%\' height=\'100%\' fill=\'%23e2e8f0\'/><text x=\'50%\' y=\'52%\' text-anchor=\'middle\' font-size=\'22\' fill=\'%2360738b\' font-family=\'Arial\'>Profile</text></svg>'" />
+                </div>
+                <div class="meta">
+                    <div class="name">Deepak Bhandari</div>
+                    <div class="headline">Senior Mobile Application Engineer | Consultant at DARC, USAC</div>
+                    <div class="contact">
+                        <span><i class="fa-solid fa-location-dot"></i> Dehradun, Uttarakhand</span>
+                        <span><i class="fa-solid fa-phone"></i> +91 8800784122</span>
+                        <span><i class="fa-solid fa-envelope"></i> dpkbharadwaj13@gmail.com</span>
+                    </div>
+                </div>
+            </div>
+            <div class="socials">
+                <a href="https://www.linkedin.com/in/deepakbhandari-kozmo/" target="_blank"><i
+                        class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/deepakbhandari-kozmo/" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://twitter.com/" target="_blank"><i class="fab fa-x-twitter"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- LEFT -->
+        <section>
+            <div class="panel" id="about">
+                <h2>About</h2>
+                <p class="lead">Solution-oriented Cross Platform Application Engineer with 4+ years of experience in
+                    architecting software solutions for government agencies. Specialized in developing drone
+                    applications, IoT integration, and cross-platform development. Adept at translating complex
+                    requirements into scalable software architectures that bridge hardware and software systems. Strong
+                    background in government compliance frameworks and public-private technology collaborations with a
+                    focus on autonomous systems and smart environment solutions.</p>
+                <div style="height:10px"></div>
+                <h2>Core Summary</h2>
+                <p class="lead">Solution-oriented Technology Leader with experience delivering scalable, secure, and
+                    government-compliant software solutions. Proven expertise in UAV/drone application development, GIS
+                    & mapping integrations, and end-to-end solution architecture for state-level agencies. Experienced
+                    in technical partnership management, compliance documentation, and mentoring engineering teams.</p>
+            </div>
+
+            <div class="panel" id="experience" style="margin-top:var(--gap)">
+                <h2>Experience</h2>
+                <div class="timeline">
+                    <div class="t-item" data-delay="0">
+                        <div class="date">Aug 2022 – Present</div>
+                        <h3>Senior Mobile Application Engineer | Consultant — DTOWN ROBOTICS (Deployed at DARC, USAC)
+                        </h3>
+                        <ul>
+                            <li>Architected government-grade drone operations and monitoring systems ensuring security,
+                                scalability, and compliance with national UAV regulations.</li>
+                            <li>Designed standardized frameworks for drone application development to accelerate project
+                                delivery across departments.</li>
+                            <li>Directed end-to-end technical architecture integrating UAV telemetry with real-time GIS
+                                mapping.</li>
+                            <li>Established technical partnerships between government agencies and private technology
+                                providers.</li>
+                            <li>Authored technical specifications and mentored development teams on compliance and
+                                implementation strategies.</li>
+                        </ul>
+                    </div>
+                    <div class="t-item" data-delay="120">
+                        <div class="date">Feb 2022 – Jul 2022</div>
+                        <h3>Mobile Application Developer — Prakhar Software Solutions Pvt. Ltd.</h3>
+                        <ul>
+                            <li>Developed cross-platform government applications using Flutter, integrating Firebase for
+                                real-time data workflows.</li>
+                            <li>Implemented complex UI components and secure authentication workflows.</li>
+                            <li>Contributed to CI/CD pipeline optimisation, reducing deployment time.</li>
+                        </ul>
+                    </div>
+                    <div class="t-item" data-delay="240">
+                        <div class="date">Sep 2021 – Feb 2022</div>
+                        <h3>Mobile Application Developer — Nippon Data Systems Ltd.</h3>
+                        <ul>
+                            <li>Created native mobile interfaces for complex data visualization and implemented RESTful
+                                API integrations for seamless synchronization.</li>
+                            <li>Optimized application performance for resource-intensive operations and participated in
+                                agile development cycles.</li>
+                        </ul>
+                    </div>
+                    <div class="t-item" data-delay="360">
+                        <div class="date">Mar 2021 – Jun 2021</div>
+                        <h3>Engineering Intern — Smart City Dehradun</h3>
+                        <ul>
+                            <li>Conducted system testing and performance analysis for the Integrated Command Control
+                                Center.</li>
+                            <li>Analyzed IoT sensor networks and recommended improvements for data flows across the
+                                city.</li>
+                        </ul>
+                    </div>
+                    <div class="t-item" data-delay="480">
+                        <div class="date">Mar 2020 – Feb 2021</div>
+                        <h3>Research & Development Engineer — DTOWN ROBOTICS</h3>
+                        <ul>
+                            <li>Led R&D for Autonomous Aerial Vehicles, integrating sensors and developing firmware for
+                                real-time testing.</li>
+                            <li>Delivered end-to-end prototypes and coordinated field testing for UAV systems.</li>
+                        </ul>
+                    </div>
+                    <div class="t-item" data-delay="600">
+                        <div class="date">Jul 2019 – Aug 2019</div>
+                        <h3>Intern — DTOWN ROBOTICS</h3>
+                        <ul>
+                            <li>Worked on microcontroller projects including home automation, obstacle-avoiding robots,
+                                and image-processing robots.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel" id="projects" style="margin-top:var(--gap)">
+                <h2>Key Projects</h2>
+                <div class="projects">
+                    <div class="project" data-delay="0">
+                        <img src="https://content.instructables.com/F8O/PSGL/LK9ZZA0D/F8OPSGLLK9ZZA0D.jpg?auto=webp" alt="RFID Challan"
+                            onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 600 300\'><rect width=\'100%\' height=\'100%\' fill=\'%23e2e8f0\'/><text x=\'50%\' y=\'52%\' text-anchor=\'middle\' font-size=\'22\' fill=\'%2360738b\' font-family=\'Arial\'>RFID Project</text></svg>'" />
+                        <div class="body">
+                            <h4>RFID-Based Automatic Challan System (College)</h4>
+                            <p>Engineered a traffic violation management solution deploying NodeMCU ESP8266 and MFRC522
+                                RFID. Integrated vehicle identification, automated challan generation, and secure
+                                payment workflows — reducing manual processing time by 40%.</p>
+                        </div>
+                    </div>
+                    <div class="project" data-delay="120">
+                        <img src="https://raw.githubusercontent.com/deepakbhandari-kozmo/GCS/refs/heads/main/SS_gcs.png" alt="GCS"
+                            onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 600 300\'><rect width=\'100%\' height=\'100%\' fill=\'%23e2e8f0\'/><text x=\'50%\' y=\'52%\' text-anchor=\'middle\' font-size=\'22\' fill=\'%2360738b\' font-family=\'Arial\'>GCS</text></svg>'" />
+                        <div class="body">
+                            <h4>Custom Ground Control Station (GCS)</h4>
+                            <p>Architected a Flutter-based GCS for ArduPilot SITL using MAVLink over UDP, TCP and
+                                Serial. Integrated Python backends for telemetry streaming and mission planning to
+                                enable low-latency UAV control.</p>
+                        </div>
+                    </div>
+                    <div class="project" data-delay="240">
+                        <img src="https://raw.githubusercontent.com/deepakbhandari-kozmo/Divyadrishti/refs/heads/main/Divyadrishti.png" alt="GIS App"s
+                            onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 600 300\'><rect width=\'100%\' height=\'100%\' fill=\'%23e2e8f0\'/><text x=\'50%\' y=\'52%\' text-anchor=\'middle\' font-size=\'22\' fill=\'%2360738b\' font-family=\'Arial\'>GIS</text></svg>'" />
+                        <div class="body">
+                            <h4>Web-Based GIS Mapping Application (USAC)</h4>
+                            <p>Developed a web GIS platform integrated with GeoServer for managing geospatial layers.
+                                Features include multi-language support, user authentication, admin dashboard, and
+                                enhanced PDF export with accurate visual layer color representation.</p>
+                        </div>
+                    </div>
+                    <div class="project" data-delay="360">
+                        <img src="https://ujjainsmartcity.com/wp-content/uploads/2019/08/iccc.jpg" alt="Smart City"
+                            onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 600 300\'><rect width=\'100%\' height=\'100%\' fill=\'%23e2e8f0\'/><text x=\'50%\' y=\'52%\' text-anchor=\'middle\' font-size=\'22\' fill=\'%2360738b\' font-family=\'Arial\'>Smart City</text></svg>'" />
+                        <div class="body">
+                            <h4>Smart City Integrations</h4>
+                            <p>Contributed to Smart City Dehradun: IoT sensor integration, dashboards, and command
+                                center testing to improve operational efficiency.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RIGHT -->
+        <aside>
+            <div class="panel" id="skills">
+                <h2>Skills</h2>
+                <div class="skills-grid">
+                    <div class="skill">
+                        <div class="s-ico"><i class="devicon-flutter-plain"></i></div>
+                        <div class="s-meta">
+                            <div class="s-name">Flutter</div>
+                            <div class="bar" data-p="92"><i></i></div>
+                        </div>
+                    </div>
+                    <div class="skill">
+                        <div class="s-ico"><i class="devicon-android-plain"></i></div>
+                        <div class="s-meta">
+                            <div class="s-name">Android (Kotlin/Java)</div>
+                            <div class="bar" data-p="88"><i></i></div>
+                        </div>
+                    </div>
+                    <div class="skill">
+                        <div class="s-ico"><i class="devicon-dart-plain"></i></div>
+                        <div class="s-meta">
+                            <div class="s-name">Dart</div>
+                            <div class="bar" data-p="86"><i></i></div>
+                        </div>
+                    </div>
+                    <div class="skill">
+                        <div class="s-ico"><i class="fa-solid fa-plane"></i></div>
+                        <div class="s-meta">
+                            <div class="s-name">MAVLink & UAV Telemetry</div>
+                            <div class="bar" data-p="82"><i></i></div>
+                        </div>
+                    </div>
+                    <div class="skill">
+                        <div class="s-ico"><i class="fa-solid fa-map-location-dot"></i></div>
+                        <div class="s-meta">
+                            <div class="s-name">GIS / GeoServer</div>
+                            <div class="bar" data-p="78"><i></i></div>
+                        </div>
+                    </div>
+                    <div class="skill">
+                        <div class="s-ico"><i class="devicon-python-plain"></i></div>
+                        <div class="s-meta">
+                            <div class="s-name">Python</div>
+                            <div class="bar" data-p="74"><i></i></div>
+                        </div>
+                    </div>
+                    <div class="skill">
+                        <div class="s-ico"><i class="fa-solid fa-network-wired"></i></div>
+                        <div class="s-meta">
+                            <div class="s-name">REST APIs / Backend</div>
+                            <div class="bar" data-p="80"><i></i></div>
+                        </div>
+                    </div>
+                    <div class="skill">
+                        <div class="s-ico"><i class="devicon-amazonwebservices-plain"></i></div>
+                        <div class="s-meta">
+                            <div class="s-name">AWS / MySQL</div>
+                            <div class="bar" data-p="70"><i></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel" id="education" style="margin-top:var(--gap)">
+                <h2>Education</h2>
+                <div class="edu-item"><strong>Graphic Era Hill University</strong> — B.Tech (Information Technology),
+                    2016 – 2020 · CGPA: 7.01</div>
+                <div class="edu-item"><strong>Holy Convent Sr. Sec. School</strong> — Senior Secondary, 2014 – 2015 ·
+                    67.1%</div>
+                <div class="edu-item"><strong>Army Public School</strong> — High School, 2012 – 2013 · 60.5%</div>
+            </div>
+
+            <div class="panel" id="interests" style="margin-top:var(--gap)">
+                <h2>Interests</h2>
+                <p class="lead">Travel & Exploration, Social Activities, International Politics, Sci-fi & Fantasy,
+                    Cooking, Tech Research</p>
+                <div class="chips">
+                    <div class="chip">Travel</div>
+                    <div class="chip">Community</div>
+                    <div class="chip">Drone Tech</div>
+                    <div class="chip">GIS</div>
+                    <div class="chip">IoT</div>
+                </div>
+            </div>
+
+            <div class="panel" id="connect" style="margin-top:var(--gap)">
+                <h2>Connect</h2>
+                <div class="connect">
+                    <a class="socials a" href="https://www.linkedin.com/in/deepakbhandari-kozmo/" target="_blank"
+                        style="text-decoration:none"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                    <a class="socials a" href="https://github.com/deepakbhandari-kozmo/" target="_blank"
+                        style="text-decoration:none"><i class="fab fa-github"></i> GitHub</a>
+                    <a class="socials a" href="https://www.instagram.com/" target="_blank"
+                        style="text-decoration:none"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a class="socials a" href="https://twitter.com/" target="_blank" style="text-decoration:none"><i
+                            class="fab fa-x-twitter"></i> X</a>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <footer
+        style="max-width:1100px;margin:0 auto;padding:28px 20px;color:var(--muted);font-size:13px;text-align:center">©
+        2025 Deepak Bhandari — Built for solution architecture positions • Contact: dpkbharadwaj13@gmail.com</footer>
+
+    <script>
+        // === Canvas network background ===
+        (function () {
+            const c = document.getElementById('bgCanvas');
+            const ctx = c.getContext('2d');
+            function size() { c.width = innerWidth; c.height = innerHeight }
+            size(); addEventListener('resize', size);
+            const N = 80, nodes = [...Array(N)].map(() => ({ x: Math.random() * c.width, y: Math.random() * c.height, vx: (Math.random() - .5) * 0.6, vy: (Math.random() - .5) * 0.6 }));
+            function tick() {
+                ctx.clearRect(0, 0, c.width, c.height);
+                // draw nodes
+                nodes.forEach(n => {
+                    n.x += n.vx; n.y += n.vy;
+                    if (n.x < 0 || n.x > c.width) n.vx *= -1;
+                    if (n.y < 0 || n.y > c.height) n.vy *= -1;
+                    ctx.beginPath(); ctx.arc(n.x, n.y, 1.8, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(37,99,235,.85)'; ctx.fill();
+                });
+                // draw links
+                for (let i = 0; i < N; i++) {
+                    for (let j = i + 1; j < N; j++) {
+                        const a = nodes[i], b = nodes[j];
+                        const dx = a.x - b.x, dy = a.y - b.y, d = Math.hypot(dx, dy);
+                        if (d < 140) {
+                            ctx.globalAlpha = 1 - d / 140;
+                            ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+                            ctx.strokeStyle = 'rgba(37,99,235,.35)'; ctx.lineWidth = 1; ctx.stroke();
+                            ctx.globalAlpha = 1;
+                        }
+                    }
+                }
+                requestAnimationFrame(tick);
+            }
+            tick();
+        })();
+
+        // === Intersection reveal & skill bars ===
+        (function () {
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        e.target.classList.add('visible');
+                        const bars = e.target.querySelectorAll('.bar');
+                        bars.forEach(b => { const p = b.dataset.p || 0; b.querySelector('i').style.width = p + '%' });
+                    }
+                })
+            }, { threshold: .15 });
+            document.querySelectorAll('.t-item, .project, .skill').forEach(el => io.observe(el));
+        })();
+    </script>
+</body>
+
+</html>
